@@ -52,6 +52,30 @@ impl FromRequest for MiniJinjaRenderer {
 }
 
 
+async fn hosts(
+    tmpl_env: MiniJinjaRenderer,
+    query: web::Query<HashMap<String, String>>,
+) -> actix_web::Result<impl Responder> {
+    // if let Some(name) = query.get("name") {
+    tmpl_env.render(
+        "hosts.html",
+        minijinja::context! {
+            text => "Welcome!",
+        },
+    )
+}
+async fn add_host(
+    tmpl_env: MiniJinjaRenderer,
+    query: web::Query<HashMap<String, String>>,
+) -> actix_web::Result<impl Responder> {
+    // if let Some(name) = query.get("name") {
+    tmpl_env.render(
+        "hosts.html",
+        minijinja::context! {
+            text => "Welcome!",
+        },
+    )
+}
 
 async fn servers(
     tmpl_env: MiniJinjaRenderer,
@@ -60,6 +84,58 @@ async fn servers(
     // if let Some(name) = query.get("name") {
     tmpl_env.render(
         "servers.html",
+        minijinja::context! {
+            text => "Welcome!",
+        },
+    )
+}
+
+async fn add_server(
+    tmpl_env: MiniJinjaRenderer,
+    query: web::Query<HashMap<String, String>>,
+) -> actix_web::Result<impl Responder> {
+    // if let Some(name) = query.get("name") {
+    tmpl_env.render(
+        "servers.html",
+        minijinja::context! {
+            text => "Welcome!",
+        },
+    )
+}
+
+async fn users(
+    tmpl_env: MiniJinjaRenderer,
+    query: web::Query<HashMap<String, String>>,
+) -> actix_web::Result<impl Responder> {
+    // if let Some(name) = query.get("name") {
+    tmpl_env.render(
+        "users.html",
+        minijinja::context! {
+            text => "Welcome!",
+        },
+    )
+}
+
+async fn add_user(
+    tmpl_env: MiniJinjaRenderer,
+    query: web::Query<HashMap<String, String>>,
+) -> actix_web::Result<impl Responder> {
+    tmpl_env.render(
+        "users.html",
+        minijinja::context! {
+            text => "Welcome!",
+        }
+    )
+}
+
+
+async fn check_ssh_connection(
+    tmpl_env: MiniJinjaRenderer,
+    query: web::Query<HashMap<String, String>>,
+) -> actix_web::Result<impl Responder> {
+    // if let Some(name) = query.get("name") {
+    tmpl_env.render(
+        "users.html",
         minijinja::context! {
             text => "Welcome!",
         },
@@ -105,8 +181,14 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(tmpl_reloader.clone())
-            .service(web::resource("/").route(web::get().to(servers)))
+            .service(web::resource("/").route(web::get().to(hosts)))
+            .service(web::resource("/hosts").route(web::get().to(hosts)))
+            .service(web::resource("/hosts").route(web::post().to(add_host)))
             .service(web::resource("/servers").route(web::get().to(servers)))
+            .service(web::resource("/servers").route(web::post().to(add_server)))
+            .service(web::resource("/users").route(web::get().to(users)))
+            .service(web::resource("/users").route(web::post().to(add_user)))
+            .service(web::resource("/check_ssh_connection").route(web::get().to(users)))
             .service(fs::Files::new("/assets", "./assets").show_files_listing())
             .wrap(ErrorHandlers::new().handler(StatusCode::NOT_FOUND, not_found))
             .wrap(Logger::default())
