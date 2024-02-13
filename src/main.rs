@@ -13,6 +13,36 @@ use actix_web_lab::respond::Html;
 use minijinja::path_loader;
 use minijinja_autoreload::AutoReloader;
 
+
+
+struct Host{
+    id:i32,
+    name:String,
+    ip_address: String,
+    username: String,
+    password: String,
+}
+
+struct VpnServer{
+    id:i32,
+    host_id:i32,
+    name: String,
+    port: i16,
+    subnet: String
+}
+
+
+struct Users{
+    id:i32,
+    vpn_id:i32,
+    username: String,
+    is_plant:bool,
+    ca_key: String,
+    password: String
+}
+
+
+
 struct MiniJinjaRenderer {
     tmpl_env: web::Data<minijinja_autoreload::AutoReloader>,
 }

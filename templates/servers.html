@@ -21,7 +21,113 @@
           </ul>
         </div>
       </nav>
+
+      <div class="container">
+        
+
+        <div class="card">
+            <div class="card-content">
+              
+              <span class="card-title">Add Vpn server</span>
+                <div class="row">
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input id="host" type="text" class="autocomplete">
+                            <label for="host">Host</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input id="plant_name" type="text" class="validate">
+                            <label for="plant_name">Plant Name</label>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input id="post" type="text" class="validate">
+                            <label for="port">Port</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input id="Subnet" type="text" class="validate">
+                            <label for="Subnet">Subnet</label>
+                        </div>
+                    </div>
+            
+                </div>
+
+
+            </div>
+            <div class="card-action right-align">
+              <a href="#">Check connection</a>
+              <a href="#">Save</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-content">
+                <table class="striped">
+                    <thead>
+                      <tr>
+                          <th>Host IP</th>
+                          <th>Port</th>
+                          <th>Useranme</th>
+                          <th>Password</th>
+                          <th>Action</th>
+                      </tr>
+                    </thead>
+            
+                    <tbody>
+                      <tr>
+                        <td>Alvin</td>
+                        <td>Eclair</td>
+                        <td>$0.87</td>
+                        <td>$0.87</td>
+                        <td>$0.87</td>
+                      </tr>
+                      <tr>
+                        <td>Alan</td>
+                        <td>Jellybean</td>
+                        <td>$3.76</td>
+                        <td>$0.87</td>
+                        <td>$0.87</td>
+                      </tr>
+                      <tr>
+                        <td>Jonathan</td>
+                        <td>Lollipop</td>
+                        <td>$7.00</td>
+                        <td>$0.87</td>
+                        <td>$0.87</td>
+
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+
+
+        
+    
+    </div>
     <!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="assets/js/jquery.min.js"></script>
     <script type="text/javascript" src="assets/js/materialize.min.js"></script>
+    <script>
+
+      $(document).ready(function(){
+          $('input.autocomplete').autocomplete2({
+            data: [
+              {"id": 1,"text": "something1"},
+              {"id": 2,"text": "something2"}
+            ],
+            onAutocomplete: function(val) {
+              // Callback function when value is autcompleted.
+              alert(val)
+              
+              //Here you then can do whatever you want, val tells you what got clicked so you can push to another page etc...
+            },
+          });
+        });
+
+
+    </script>
   </body>
 </html>
