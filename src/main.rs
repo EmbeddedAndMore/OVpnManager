@@ -1,4 +1,6 @@
 use std::{collections::HashMap, env, path::PathBuf};
+use log::info;
+use russh::*;
 
 use actix_utils::future::{ready, Ready};
 use actix_web::{
@@ -13,10 +15,14 @@ use actix_web_lab::respond::Html;
 use minijinja::path_loader;
 use minijinja_autoreload::AutoReloader;
 
+use serde::{Deserialize, Serialize};
+
+const MAX_SIZE: usize = 262_144; // max payload size is 256k
 
 
+#[derive(Serialize, Deserialize, Debug)]
 struct Host{
-    id:i32,
+    id:Option<i32>,
     name:String,
     ip_address: String,
     username: String,
@@ -24,7 +30,7 @@ struct Host{
 }
 
 struct VpnServer{
-    id:i32,
+    id: Option<i32>,
     host_id:i32,
     name: String,
     port: i16,
@@ -106,6 +112,18 @@ async fn add_host(
         },
     )
 }
+
+async fn test_host_connection(
+    tmpl_env: MiniJinjaRenderer,
+    mut payload: web::Json<Host>,
+) -> actix_web::Result<impl Responder> {
+    // payload is a stream of Bytes objects
+    println!("{:?}", payload);
+    Ok(HttpResponse::Ok().finish())
+
+}
+
+
 
 async fn servers(
     tmpl_env: MiniJinjaRenderer,
@@ -214,6 +232,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("/").route(web::get().to(hosts)))
             .service(web::resource("/hosts").route(web::get().to(hosts)))
             .service(web::resource("/hosts").route(web::post().to(add_host)))
+            .service(web::resource("/hosts/connection").route(web::post().to(test_host_connection)))
             .service(web::resource("/servers").route(web::get().to(servers)))
             .service(web::resource("/servers").route(web::post().to(add_server)))
             .service(web::resource("/users").route(web::get().to(users)))
