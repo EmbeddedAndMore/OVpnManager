@@ -119,7 +119,7 @@ async fn test_host_connection(
 ) -> actix_web::Result<impl Responder> {
     // payload is a stream of Bytes objects
     println!("{:?}", payload);
-    Ok(HttpResponse::Ok().finish())
+    Ok(HttpResponse::build(StatusCode::OK).content_type(ContentType::json()).body("{\"response\":\"successful\"}"))
 
 }
 

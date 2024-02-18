@@ -28,8 +28,9 @@
         <div class="col-md-8"></div>
         <div class="col-md-4">
           <div class="float-end">
-            <a href="#" class="btn btn-primary btn-sm">Check connection</a>
-            <a href="#" class="btn btn-success btn-sm">Save</a>
+            <button id="btn_connection"  type="button" class="btn btn-primary btn-sm">Check connection</Button>
+            <button id="btn_save"  type="button" class="btn btn-success btn-sm">Save</Button>
+            
           </div>
         </div>
       </div>
@@ -95,5 +96,38 @@
       </table>
     </div>
   </div>
+
+
+  <script>
+    $(document).ready(function(){
+      $("#btn_connection").click(function(e) {
+        let name = $("#name").val();
+        let ip = $("#ip_address").val();
+        let username = $("#username").val();
+        let password = $("#password").val();
+        if (name === "" || ip === "" || username==="" || password ==="")
+          return;
+        e.preventDefault();
+        $.ajax({
+          async:true,
+          type: "POST",
+          url: "/hosts/connection",
+          dataType: 'json',
+          contentType: "application/json",
+          data: JSON.stringify({ 
+              name: name, ip_address:ip, username:username, password:password
+          }),
+          success: function(result) {
+            console.log("success")
+            console.log(result);
+          },
+          error: function(result) {
+            console.log("error")
+            console.log(result);
+          }
+        });
+      });
+    });
+  </script>
         
 {% endblock %}
