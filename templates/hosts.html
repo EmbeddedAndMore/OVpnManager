@@ -1,113 +1,99 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <!--Import Google Icon Font-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="assets/css/materialize.min.css"  media="screen,projection"/>
+{% extends "base.html" %}
+{% block body %}
 
-    <!--Let browser know website is optimized for mobile-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  </head>
-
-  <body>
-    <nav>
-        <div class="nav-wrapper">
-          <a href="#" class="brand-logo">Logo</a>
-          <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li class="active"><a href="/hosts">Hosts</a></li>
-            <li><a href="/servers">OVpn Servers</a></li>
-            <li><a href="/users">Users</a></li>
-          </ul>
-        </div>
-    </nav>
-    <div class="container">
-        
-
-        <div class="card">
-            <div class="card-content">
-              
-              <span class="card-title">Add Host</span>
-                <div class="row">
-                    <div class="row">
-                        <div class="input-field col s6">
-                            <input id="ip_address" type="text" class="validate">
-                            <label for="ip_address">IP Address</label>
-                        </div>
-                        <div class="input-field col s6">
-                            <input id="port" type="text" class="validate">
-                            <label for="port">Port</label>
-                    </div>
-                    </div>
-                    <div class="row">
-                        <div class="input-field col s6">
-                            <input id="username" type="text" class="validate">
-                            <label for="username">Username</label>
-                        </div>
-                        <div class="input-field col s6">
-                            <input id="password" type="text" class="validate">
-                            <label for="password">Password</label>
-                        </div>
-                    </div>
-            
-                </div>
-
-
-            </div>
-            <div class="card-action right-align">
-              <a href="#">Check connection</a>
-              <a href="#">Save</a>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-content">
-                <table class="striped">
-                    <thead>
-                      <tr>
-                          <th>Host IP</th>
-                          <th>Port</th>
-                          <th>Useranme</th>
-                          <th>Password</th>
-                          <th>Action</th>
-                      </tr>
-                    </thead>
-            
-                    <tbody>
-                      <tr>
-                        <td>Alvin</td>
-                        <td>Eclair</td>
-                        <td>$0.87</td>
-                        <td>$0.87</td>
-                        <td>$0.87</td>
-                      </tr>
-                      <tr>
-                        <td>Alan</td>
-                        <td>Jellybean</td>
-                        <td>$3.76</td>
-                        <td>$0.87</td>
-                        <td>$0.87</td>
-                      </tr>
-                      <tr>
-                        <td>Jonathan</td>
-                        <td>Lollipop</td>
-                        <td>$7.00</td>
-                        <td>$0.87</td>
-                        <td>$0.87</td>
-
-                      </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        
-
-
-        
-    
+  <div class="card">
+    <div class="card-header">
+      <h5 class="card-title">Add Host</h5>
     </div>
-    
-    <!--JavaScript at end of body for optimized loading-->
-    <script type="text/javascript" src="assets/js/materialize.min.js"></script>
-  </body>
-</html>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <input id="ip_address" placeholder="IP Address" type="text" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <input id="port" placeholder="Port" type="text" class="form-control">
+            </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-md-6">
+            <input id="username" placeholder="Username" type="text" class="form-control">
+          </div>
+          <div class="col-md-6">
+              <input id="password" placeholder="Password" type="text" class="form-control">
+          </div>
+        </div>
+    </div>
+    <div class="card-footer">
+      <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4">
+          <div class="float-end">
+            <a href="#" class="btn btn-primary btn-sm">Check connection</a>
+            <a href="#" class="btn btn-success btn-sm">Save</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-3">
+    <div class="card-body">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">IP Address</th>
+            <th scope="col">Port</th>
+            <th scope="col">Username</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>192.168.1.1</td>
+            <td>5000</td>
+            <td>root</td>
+            <td> 
+              <button class="btn btn-warning btn-sm">
+                <i class="bi bi-pen"></i>
+              </button>
+              <button class="btn btn-danger btn-sm">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>192.168.1.2</td>
+            <td>5001</td>
+            <td>root</td>
+            <td>
+              <button class="btn btn-warning btn-sm">
+                <i class="bi bi-pen"></i>
+              </button>
+              <button class="btn btn-danger btn-sm">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>192.168.1.3</td>
+            <td>5002</td>
+            <td>root</td>
+            <td>
+              <button class="btn btn-warning btn-sm">
+                <i class="bi bi-pen"></i>
+              </button>
+              <button class="btn btn-danger btn-sm">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+        
+{% endblock %}

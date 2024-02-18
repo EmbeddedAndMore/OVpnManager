@@ -1,31 +1,84 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <!--Import Google Icon Font-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="assets/css/materialize.min.css"  media="screen,projection"/>
+{% extends "base.html" %}
+{% block body %}
 
-    <!--Let browser know website is optimized for mobile-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  </head>
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title">Add Users</h5>
+  </div>
+  <div class="card-body">
+      <div class="row">
+          <div class="col-md-6">
+              <input id="name" placeholder="Name abbreviation" type="text" class="form-control">
+          </div>
+          <div class="col-md-6">
+              <input id="email" placeholder="Email" type="text" class="form-control">
+          </div>
+      </div>
+  </div>
+  <div class="card-footer">
+    <div class="row">
+      <div class="col-md-8"></div>
+      <div class="col-md-4">
+        <a href="#" class="btn btn-success btn-sm float-end">Add</a>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <body>
-    <nav>
-        <div class="nav-wrapper">
-            <a href="#" class="brand-logo">Logo</a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="/hosts">Hosts</a></li>
-            <li><a href="/servers">OVpn Servers</a></li>
-            <li class="active"><a href="/users">Users</a></li>
-            </ul>
-        </div>
-    </nav>
+<div class="card mt-3">
+  <div class="card-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">User</th>
+          <th scope="col">Email</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td>marmoun</td>
+          <td>mohammad.armoun@reverion.com</td>
+          <td> 
+            <button class="btn btn-warning btn-sm">
+              <i class="bi bi-pen"></i>
+            </button>
+            <button class="btn btn-danger btn-sm">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">2</th>
+          <td>marmoun</td>
+          <td>mohammad.armoun@reverion.com</td>
+          <td>
+            <button class="btn btn-warning btn-sm">
+              <i class="bi bi-pen"></i>
+            </button>
+            <button class="btn btn-danger btn-sm">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">3</th>
+          <td>marmoun</td>
+          <td>mohammad.armoun@reverion.com</td>
+          <td>
+            <button class="btn btn-warning btn-sm">
+              <i class="bi bi-pen"></i>
+            </button>
+            <button class="btn btn-danger btn-sm">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
-
-    
-
-    <!--JavaScript at end of body for optimized loading-->
-    <script type="text/javascript" src="assets/js/materialize.min.js"></script>
-  </body>
-</html>
+{% endblock %}
