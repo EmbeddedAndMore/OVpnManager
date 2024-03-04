@@ -1,8 +1,9 @@
 use std::{collections::HashMap, env, path::PathBuf};
+use diesel::{deserialize::Queryable, insert_into, Selectable, Insertable};
 use log::info;
-use russh::*;
+use russh::{client::Session, *};
 
-use actix_utils::future::{ready, Ready};
+use actix_utils::future::{err, ready, Ready};
 use actix_web::{
     dev::{self, ServiceResponse},
     error,
@@ -14,20 +15,42 @@ use actix_files as fs;
 use actix_web_lab::respond::Html;
 use minijinja::path_loader;
 use minijinja_autoreload::AutoReloader;
+use r2d2;
 
 use serde::{Deserialize, Serialize};
+use diesel::RunQueryDsl; 
+
+mod ssh_client;
+mod schema;
+mod db;
 
 const MAX_SIZE: usize = 262_144; // max payload size is 256k
 
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Queryable, Selectable)]
+#[diesel(primary_key(id))]
+#[diesel(table_name=schema::hosts)]
+#[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 struct Host{
-    id:Option<i32>,
+    id:i32,
     name:String,
     ip_address: String,
     username: String,
+    password: String
+}
+
+#[derive(Serialize, Deserialize, Debug, Insertable)]
+#[diesel(table_name=schema::hosts)]
+struct HostCreate {
+    name: String,
+    ip_address: String,
+    username:  String,
     password: String,
 }
+
+
+
+
 
 struct VpnServer{
     id: Option<i32>,
@@ -92,7 +115,7 @@ async fn hosts(
     tmpl_env: MiniJinjaRenderer,
     query: web::Query<HashMap<String, String>>,
 ) -> actix_web::Result<impl Responder> {
-    // if let Some(name) = query.get("name") {
+    
     tmpl_env.render(
         "hosts.html",
         minijinja::context! {
@@ -101,25 +124,44 @@ async fn hosts(
     )
 }
 async fn add_host(
-    tmpl_env: MiniJinjaRenderer,
-    query: web::Query<HashMap<String, String>>,
+    pool: web::Data<db::Pool>,
+    mut payload: web::Json<HostCreate>,
 ) -> actix_web::Result<impl Responder> {
-    // if let Some(name) = query.get("name") {
-    tmpl_env.render(
-        "hosts.html",
-        minijinja::context! {
-            text => "Welcome!",
-        },
-    )
+
+    let mut conn = pool.get().expect("couldn't get db connection from pool");
+
+    diesel::insert_into(schema::hosts::table).values(&payload.into_inner()).execute( &mut conn).expect("Error creating new todo");
+    Ok(HttpResponse::build(StatusCode::OK).content_type(ContentType::json()).body("{\"response\":\"successful\"}"))
 }
 
 async fn test_host_connection(
     tmpl_env: MiniJinjaRenderer,
-    mut payload: web::Json<Host>,
+    mut payload: web::Json<HostCreate>,
 ) -> actix_web::Result<impl Responder> {
     // payload is a stream of Bytes objects
     println!("{:?}", payload);
-    Ok(HttpResponse::build(StatusCode::OK).content_type(ContentType::json()).body("{\"response\":\"successful\"}"))
+
+    let ssh = ssh_client::Session::connect(
+        "root".to_string(),
+        "aPRkepaRX7fbLTjxvnxx".to_string(),
+        ("49.13.10.131", 22),
+    )
+    .await;
+
+    match  ssh{
+        Ok(mut ssh_session)=>{
+            info!("Connected");
+            ssh_session.close().await.unwrap();
+            Ok(HttpResponse::build(StatusCode::OK).content_type(ContentType::json()).body("{\"response\":\"successful\"}"))
+        },
+        Err(e)=>{
+            Ok(HttpResponse::build(StatusCode::SERVICE_UNAVAILABLE).content_type(ContentType::json()).body("{\"response\":\"successful\"}"))
+        }
+
+    }
+    
+
+    
 
 }
 
@@ -194,6 +236,9 @@ async fn check_ssh_connection(
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+    
+
+    let pool = db::db_conn_pool();
 
     // If TEMPLATE_AUTORELOAD is set, then the path tracking is enabled.
     let enable_template_autoreload = env::var("TEMPLATE_AUTORELOAD").as_deref() == Ok("true");
@@ -229,6 +274,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(tmpl_reloader.clone())
+            .app_data(web::Data::new(pool.clone()))
             .service(web::resource("/").route(web::get().to(hosts)))
             .service(web::resource("/hosts").route(web::get().to(hosts)))
             .service(web::resource("/hosts").route(web::post().to(add_host)))
